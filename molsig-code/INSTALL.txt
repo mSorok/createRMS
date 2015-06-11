@@ -1,0 +1,9 @@
+/*
+ * SSCAN PROGRAM Version 1.00
+ * BioRetroSynth Lab - Institute of Systems and Synthetic Biology 
+ * Nov 2012
+*/
+
+INSTALLATION
+1. Go to src folder and run "make".
+2. Executable "sscan" will be installed in bin folder.
