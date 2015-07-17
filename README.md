@@ -5,7 +5,7 @@
 Last modification : 11/06/2015
 
 
-Requested:
+Requirements:
 	o MetaCyc flat files
 		x reactions.dat
 		x MetaCyc-MOLfiles
