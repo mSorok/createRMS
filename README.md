@@ -6,12 +6,12 @@ Last modification : 11/06/2015
 
 
 Requirements:
-	o MetaCyc flat files
-		x reactions.dat
-		x MetaCyc-MOLfiles
-	o ChemAxon's molconvert
-	o molsig (http://molsig.sourceforge.net/)
-	o a MySQL database
+	- MetaCyc flat files
+		- reactions.dat
+		- MetaCyc-MOLfiles
+	- ChemAxon's molconvert
+	- molsig (http://molsig.sourceforge.net/)
+	- a MySQL database
 
 ***********************************************************************************************************************
 
