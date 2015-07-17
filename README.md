@@ -9,7 +9,7 @@ Requirements:
 
 	- MetaCyc flat files
 		- reactions.dat
-		- MetaCyc-MOLfiles
+		- MOL files in the "MetaCyc-MOLfiles" directory
 	- ChemAxon's molconvert
 	- molsig (http://molsig.sourceforge.net/)
 	- a MySQL database
