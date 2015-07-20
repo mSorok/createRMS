@@ -46,73 +46,76 @@ __Requirements:__
 ### Step 4: Insertion of RMS in database
 
     
-TABLES CREATION
+#### DB tables creaction
+
+```
     
-    -- Reaction - RMS correpondency table
-    DROP TABLE IF EXISTS Reaction_RMS_CPD;
-    CREATE TABLE Reaction_RMS_CPD(
-    diameter INT(3),
-    MR_id VARCHAR(255),
-    RMS TEXT(80000)
-    );
-    
-    ALTER TABLE Reaction_RMS_CPD ADD INDEX(MR_id);
+ -- Reaction - RMS correpondency table
+DROP TABLE IF EXISTS Reaction_RMS_CPD;
+CREATE TABLE Reaction_RMS_CPD(
+height INT(3),
+MR_id VARCHAR(255),
+RMS TEXT(80000)
+);
+ALTER TABLE Reaction_RMS_CPD ADD INDEX(MR_id);
 
 
     
-    -- RMS - MD5 encoded RMS (RMSf)
-    DROP TABLE IF EXISTS RMS_RMSf_CPD;
-    CREATE TABLE RMS_RMSf_CPD(
-    RMS TEXT(80000),
-    RMSf VARCHAR(255)
-    );
-    ALTER TABLE RMS_RMSf_CPD ADD INDEX (RMSf);
+-- RMS - MD5 encoded RMS (RMSh)
+DROP TABLE IF EXISTS RMS_RMSh_CPD;
+CREATE TABLE RMS_RMSh_CPD(
+RMS TEXT(80000),
+RMSh VARCHAR(255)
+);
+ALTER TABLE RMS_RMSh_CPD ADD INDEX (RMSh);
     
 
-    -- Reaction - RMSf correspondency table
-    DROP TABLE IF EXISTS Reaction_RMSf_CPD;
-    CREATE TABLE Reaction_RMSf_CPD(
-    MR_id VARCHAR(255),
-    RMSf VARCHAR(255),
-    diameter INT(3),
-    reaction_type enum('balanced','unbalanced','no-pwy') DEFAULT 'unbalanced'
-    );
-    ALTER IGNORE TABLE Reaction_RMSf_CPD ADD UNIQUE INDEX(MR_id, RMSf,diameter);
-	
+-- Reaction - RMSh correspondency table
+DROP TABLE IF EXISTS Reaction_RMSh_CPD;
+CREATE TABLE Reaction_RMSh_CPD(
+MR_id VARCHAR(255),
+RMSh VARCHAR(255),
+height INT(3),
+reaction_type enum('balanced','unbalanced','no-pwy') DEFAULT 'unbalanced'
+);
+ALTER IGNORE TABLE Reaction_RMSh_CPD ADD UNIQUE INDEX(MR_id, RMSh, height);
+    
+```	
 	
 	
 
      
-INSERTION IN DABABASE
-	o insert rms_sscan.txt in Reaction_RMS_CPD table 
+#### Insert file in database
+* insert `rms_sscan.txt` in `Reaction_RMS_CPD` table 
         
 
-Transform text RMS in MD5 encoded RMSf
+#### Transform text RMS in MD5 encoded RMSh
 
-
-    INSERT IGNORE INTO RMS_RMSf_CPD
-    SELECT RMS, MD5(RMS)
-    FROM Reaction_RMS_CPD
-    GROUP BY RMS;
+```mysql
+INSERT IGNORE INTO RMS_RMSh_CPD
+SELECT RMS, MD5(RMS)
+FROM Reaction_RMS_CPD
+GROUP BY RMS;
      
-    INSERT IGNORE INTO Reaction_RMSf_CPD(MR_id, RMSf,diameter)
-    SELECT MR_id, RMSf, diameter
-    FROM Reaction_RMS_CPD 
-        INNER JOIN RMS_RMSf_CPD USING(RMS);
+INSERT IGNORE INTO Reaction_RMSf_CPD(MR_id, RMSh,diameter)
+SELECT MR_id, RMSh, diameter
+FROM Reaction_RMS_CPD 
+    INNER JOIN RMS_RMSh_CPD USING(RMS);
         
 
     
-    -- AS at height 0 balanced reactions have their RMS = '0.0', it's a way to detect unbalanced
-	reactions
-    UPDATE Reaction_RMSf_CPD AS RRF, Reaction_RMS_CPD AS RR
-    SET RRF.reaction_type = 'balanced'
-    WHERE RRF.MR_id = RR.MR_id AND RR.diameter=0 AND RR.RMS = '0.0'; 
+-- AS at height 0 balanced reactions have their RMS = '0.0', it's a way to detect unbalanced reactions
+UPDATE Reaction_RMSh_CPD AS RRF, Reaction_RMS_CPD AS RR
+SET RRF.reaction_type = 'balanced'
+WHERE RRF.MR_id = RR.MR_id AND RR.diameter=0 AND RR.RMS = '0.0'; 
     
      
     
-    DELETE FROM Reaction_RMSf_CPD WHERE RMSf IS NULL;
+DELETE FROM Reaction_RMSf_CPD WHERE RMSh IS NULL;
+```
 
-***********************************************************************************************************************
+----------------------------------------------------------------------------------------------------------------------
+
 RMSid creation 
 
 Extract from the database in MR_RMSf_chain.txt using this SQL request:
