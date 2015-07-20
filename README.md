@@ -3,7 +3,7 @@
 Last modification : 20/07/2015
 
 
-Requirements:
+__Requirements:__
 
 * MetaCyc flat files (to download)
   * reactions.dat
@@ -14,36 +14,36 @@ Requirements:
 
 ----------------------------------------------------------------------------------------------------------------------
 
-
-### First step: Protonation et aromatization of MOL files
+### Step 1: Protonation et aromatization of MOL files
 
 
 `$ python add_hydrogens_aromatization.py molconvert_PATH`
 
 
-***********************************************************************************************************************
-Launch molsig on all MOLfiles
+----------------------------------------------------------------------------------------------------------------------
 
-	1st arg : MOLfiles directory to use
-	2nd arg : molsig type (scan, sscan, fsscan)
-	3nd arg : o/n with/without aromatization
+### Step 2: Compute Molecular Signatures on all molecules
+
+`$ python molsigLauncher.py MolFiles_FULL_aroma sscan n`
+
+* arg1: directory where are located the MOLfiles for which compute the molecular signature
+* arg2: *scan* / *sscan* / *fsscan* molsig parameter
+* arg3: *o*/*n* = with/without aromatization
 
 
+----------------------------------------------------------------------------------------------------------------------
 
-$ python molsigLauncher.py MolFiles_FULL_aroma sscan n
+### Step 3: Compute the Reaction Molecular Signatures
 
 
-***********************************************************************************************************************
-Compute RMS
+`$ python rms_compute.py sscan n > rms_sscan.txt`
 
-	1st arg : molsig type (scan, sscan, fsscan)
-	2nd arg : o/n with/without aromatization
-	
-$ python rms_compute.py sscan n > rms_sscan.txt
+* arg1: *scan* / *sscan* / *fsscan* molsig parameter
+* arg2: *o*/*n* = with/without aromatization
 
-***********************************************************************************************************************
+----------------------------------------------------------------------------------------------------------------------
 
-Creation and insertion of RMS in database
+### Step 4: Insertion of RMS in database
 
     
 TABLES CREATION
