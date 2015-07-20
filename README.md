@@ -1,27 +1,21 @@
-######################################################################################
-#      CREATION OF REACTION MOLECULAR SIGNATURES FROM METACYC REACTIONS              #
-######################################################################################
-
-Last modification : 11/06/2015
+## CREATION OF REACTION MOLECULAR SIGNATURES FROM METACYC REACTIONS
+===================================================================
+Last modification : 20/07/2015
 
 
 Requirements:
 
-	- MetaCyc flat files
-		- reactions.dat
-		- MOL files in the "MetaCyc-MOLfiles" directory
-	- ChemAxon's molconvert
-	- molsig (http://molsig.sourceforge.net/)
-	- a MySQL database
+	* MetaCyc flat files (to download)
+	  * reactions.dat
+	  * MOL files in the "MetaCyc-MOLfiles" directory
+	* ChemAxon's molconvert
+	* molsig (http://molsig.sourceforge.net/)
+	* a MySQL database
 
-***********************************************************************************************************************
+----------------------------------------------------------------------------------------------------------------------
 
 
-
-    
-***********************************************************************************************************************
-
-Protonation et aromatization of MOL files
+### First step: Protonation et aromatization of MOL files
 
 
 $ python add_hydrogens_aromatization.py molconvert_PATH
