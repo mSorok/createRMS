@@ -100,6 +100,7 @@ ALTER IGNORE TABLE Reaction_RMSh_CPD ADD UNIQUE INDEX(MR_id, RMSh, height);
      
 #### Insert file in database
 * insert `rms_sscan.txt` in `Reaction_RMS_CPD` table:
+
 ```LOAD DATA LOCAL INFILE 'rms_sscan.txt'  INTO TABLE  Reaction_RMS_CPD FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\n' ;```       
 
 #### Transform text RMS in MD5 encoded RMSh
@@ -158,7 +159,8 @@ ALTER TABLE RMSh_RMSid_CPD ADD UNIQUE INDEX (RMSh,RMSid);
 ```
 
 
-* insert `rmsf_d_rmsid_cpd.txt` in `RMSf_RMSid_CPD` table;
+* insert `rmsf_d_rmsid_cpd.txt` in `RMSf_RMSid_CPD` table:
+
 ``` LOAD DATA  LOCAL INFILE 'rmsf_d_rmsid_cpd.txt'  INTO TABLE  RMSf_RMSid_CPD FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\n' ; ```
 
 ```MySQL
