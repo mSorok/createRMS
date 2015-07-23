@@ -14,7 +14,10 @@ __Requirements:__
 
 ----------------------------------------------------------------------------------------------------------------------
 
-### Step 1: Protonation et aromatization of MOL files
+### Step 1: Protonation and aromatization of MOL files
+
+*Input*: all MOL files of the MetaCyc-MOLfiles directory
+*Outputs*: converted MOL files are in  MolFiles_FULL directory (for protonation) and in MolFiles_FULL_aroma directory (for protonation and aromatization )
 
 
 `$ python add_hydrogens_aromatization.py molconvert_PATH`
@@ -24,29 +27,39 @@ __Requirements:__
 
 ### Step 2: Compute Molecular Signatures on all molecules
 
-`$ python molsigLauncher.py MolFiles_FULL_aroma sscan n`
-
-* arg1: directory where are located the MOLfiles for which compute the molecular signature
+*Inputs:*
+* arg1: directory where are located the MOLfiles for the computation of molecular signatures
 * arg2: *scan* / *sscan* / *fsscan* molsig parameter
 * arg3: *o*/*n* = with/without aromatization
+
+*Outputs:* mol-sig-results/sscan[0-6] for signature heights between 0 and 3
+
+`$ python molsigLauncher.py MolFiles_FULL_aroma sscan n`
+
+
 
 
 ----------------------------------------------------------------------------------------------------------------------
 
 ### Step 3: Compute the Reaction Molecular Signatures
 
+*Inputs:*
+* arg1: *scan* / *sscan* / *fsscan* molsig parameter
+* arg2: *o*/*n* = with/without aromatization
+
+*Outputs:* File with computed ReactionMolecular Signatures for all reactions for heights between 0 and 3.
 
 `$ python rms_compute.py sscan n > rms_sscan.txt`
 
-* arg1: *scan* / *sscan* / *fsscan* molsig parameter
-* arg2: *o*/*n* = with/without aromatization
+
+
 
 ----------------------------------------------------------------------------------------------------------------------
 
 ### Step 4: Insertion of RMS in database
 
     
-#### DB tables creaction
+#### DB tables creation
 
 ```MySQL
     
@@ -86,8 +99,8 @@ ALTER IGNORE TABLE Reaction_RMSh_CPD ADD UNIQUE INDEX(MR_id, RMSh, height);
 
      
 #### Insert file in database
-* insert `rms_sscan.txt` in `Reaction_RMS_CPD` table 
-        
+* insert `rms_sscan.txt` in `Reaction_RMS_CPD` table:
+```LOAD DATA LOCAL INFILE 'rms_sscan.txt'  INTO TABLE  Reaction_RMS_CPD FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\n' ;```       
 
 #### Transform text RMS in MD5 encoded RMSh
 
@@ -118,12 +131,12 @@ DELETE FROM Reaction_RMSf_CPD WHERE RMSh IS NULL;
 
 ###Step 5: Creation of intelligible RMS identifiers: RMSid
 
-_Extract from the database in `MR_RMSf_chain.txt` using this SQL request:_
+_Extract from the database the MR_RMSf_chain.txt file using this SQL request:_
 
 ```MySQL
-SELECT MR_id, GROUP_CONCAT(RMSf ORDER BY diameter SEPARATOR '$') 
-FROM Reaction_RMSf_CPD WHERE reaction_type = 'balanced' 
-GROUP BY MR_id ORDER BY MR_id DESC ;
+mysql -ABN DATBASENAME -e " SELECT MR_id, GROUP_CONCAT(RMSf ORDER BY diameter SEPARATOR '$')
+FROM Reaction_RMSf_CPD WHERE reaction_type = 'balanced'
+GROUP BY MR_id ORDER BY MR_id DESC ;" > MR_RMSf_chain.txt 
 ```
 
 
@@ -145,8 +158,8 @@ ALTER TABLE RMSh_RMSid_CPD ADD UNIQUE INDEX (RMSh,RMSid);
 ```
 
 
-* insert `rmsf_d_rmsid_cpd.txt` in the table `RMSf_RMSid_CPD`
-
+* insert `rmsf_d_rmsid_cpd.txt` in `RMSf_RMSid_CPD` table;
+``` LOAD DATA  LOCAL INFILE 'rmsf_d_rmsid_cpd.txt'  INTO TABLE  RMSf_RMSid_CPD FIELDS TERMINATED BY '\t' LINES TERMINATED BY '\n' ; ```
 
 ```MySQL
 DROP TABLE IF EXISTS Reaction_RMSid_CPD;
