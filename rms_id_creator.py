@@ -14,7 +14,7 @@ from Node import Node
 
 def main():
     
-    #ouverture du fichier MR_RMSf_chain.txt contenant les identifiants de reactions et la chaine correspondante de RMSf, ordonnee
+    # openinf of the MR_RMSf_chain.txt file containing the identifiers of tall the reactions and the correspondinf RMSf chain
     if sys.argv[1] != '':
         fileName = sys.argv[1]
     else:
@@ -22,17 +22,16 @@ def main():
     
     f = open(fileName,"r")
     
-    rms_rmsid_list = {} #cle=rmsf, valeur= rms_id
+    rms_rmsid_list = {} #key=rmsf, value= rms_id
     
-    rms_chains = {} #cle:MR_id, valeur:tableau de rmsf
+    rms_chains = {} #key:MR_id, value: list of RMSf
     
     root = None
     
     
-    #pour chaque ligne dans ce fichier
+
     for line in f:
-        #les lidgnes sont organisees de facon suivante:
-        #MR_id    chaine de RMSf separes de '$' et tries dans l'ordre du 
+
         lineTab = line.split("\t") #0 : MR_id ; 1 : RMSf chain
         
         MR_id = lineTab[0]
@@ -40,17 +39,17 @@ def main():
         rmsfstring = rmsfstring.replace("\n","")
         
         
-        rmsf = rmsfstring.split('$') #l'indice du rmsf dans ce tableau correspond au diametre du rmsf
+        rmsf = rmsfstring.split('$')
         rms_chains[MR_id] = rmsf
         
-        #creaction de la racine de l'arbre si elle n'existe pas deja
+        # creation of the tree root if desn't exist yet
         if root==None:
             root = Node(rmsf[0],0)
         
-        lastParent = root #on definit le dernier parent
+        lastParent = root #last parent definition
         
         for i in range(1,len(rmsf)):
-            #i est le diametre
+            #i is the diameter
             
             currentNode = None
             
@@ -62,7 +61,7 @@ def main():
                     
             
             if found==False:
-                #creation du noeud
+                #node creation
                 currentNode = Node(rmsf[i],i)
                 currentNode.defineParent(lastParent)
                 lastParent.addChild(currentNode)
@@ -70,9 +69,9 @@ def main():
             lastParent = currentNode
             
             
-    #l'arbre est cree, il est represente par root
+    #the tree is created, it is represented by root
     
-    #definition des ids definitifs
+    #definition of the final ids
     
     
     root.setRmsId("RMS-0")
@@ -90,7 +89,6 @@ def main():
         
 def parcours(tree):
     if tree != None:
-        #on considere que le RMS_id de tree est deja defini
         count = 1
         for n in tree.children:
             nid = tree.RMS_id+'.'+str(count)
