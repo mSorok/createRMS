@@ -13,8 +13,7 @@ import commands
 
 def main():
 
-    #argument precisant le type de molsig
-    #au choix : scan, sscan, fscan
+    # "scan" type (scan, sscan or fscan)
     if sys.argv[1] != '':
         molSigType = sys.argv[1]
     else:
@@ -37,12 +36,13 @@ def main():
     rayons = [0,2,4,6,8,10]
     
     sys.stderr.write("beguin\n")
-    #transforme le fichier .dat en un fichier tabule avec une seule reaction par ligne
+    
+    # transformes the .dat file to a tabulated file with only one reaction by line
     commands.getstatusoutput('python reactions_normalizer.py')    
            
 
     
-    reaFile = open('/env/cns/proj/agc/msorokina/RMS/createRMS/reactions_tab','r')
+    reaFile = open('reactions_tab','r')
     
     orphanCompounds = set([])
     reactionsPassed = set([])
@@ -58,7 +58,7 @@ def main():
         #sys.stderr.write("line "+frame+"\n")
         
         
-        #si tous les composants sont connus
+        #if all compounds are known
         if  data[1].find('UNKNOWN')== -1 and data[3].find('UNKNOWN') == -1 :
             
             substratesTab = []
@@ -103,7 +103,7 @@ def main():
             productsDic = {}
             
             
-            #curation des substrats
+            #substrates curation
             
             halfmolS = False
             
@@ -112,7 +112,7 @@ def main():
                 st = st.replace('\n','')
                 st = st.replace('|','')
                 elem = st.split('*')
-                c = elem[0] #le composant en soi
+                c = elem[0] #the compound
                 c = c.replace('\n','')
 
                 
@@ -122,9 +122,9 @@ def main():
                 if str(coef).find('N')>-1:
                     coef = 3    
                 if coef=='m+q':
-                    coef = 3 #valeur generique        
+                    coef = 3 #generic value   
                 if coef=='n':
-                    coef = 3 #valeur generique
+                    coef = 3 #generic value
                 if coef == '2n':
                     coef = 6
                 if coef == '3n':
@@ -136,12 +136,12 @@ def main():
                 
                     
                     
-                if coef == 0.5:  #cas de demi-molecules d'oxygene
+                if coef == 0.5:  #half-oxygen molecule case
                     halfmolS =True
                     
                 #coef = int(coef)
 
-                #ajustements connus sur les noms d'elements chimiques
+                #adjustments
                 if c == 'NAD-P-OR-NOP':
                     c='NADP'
                 c = c.replace('|','')
@@ -154,7 +154,7 @@ def main():
             
             
             
-            #curation des produits
+            #products curation
             
             halfmolP = False
             
@@ -162,7 +162,7 @@ def main():
                 pt = pt.replace('\n','')
                 pt = pt.replace('|','')
                 elem = pt.split('*')
-                c = elem[0] #le composant en soi
+                c = elem[0] 
                 c = c.replace('\n','')
                 
                 
@@ -172,9 +172,9 @@ def main():
                 if str(coef).find('N')>-1:
                     coef = 3    
                 if coef=='m+q':
-                    coef = 3 #valeur generique        
+                    coef = 3 #generic value    
                 if coef=='n':
-                    coef = 3 #valeur generique
+                    coef = 3 #generic value
                 if coef == '2n':
                     coef = 6
                 if coef == '3n':
@@ -185,12 +185,12 @@ def main():
                     coef = 4
                 
                     
-                if coef == 0.5: #cas de demi-molecules d'oxygene
+                if coef == 0.5: #hal-oxygen molecule case
                     halfmolP =True
                     
                 #coef = int(coef)
                     
-                #ajustements connus sur les noms d'elements chimiques
+                #adjustemnts
                 if c == 'NAD-P-OR-NOP':
                     c='NADP'
                     
@@ -199,7 +199,7 @@ def main():
                 if c != 'E-':
                     productsDic[c]=coef
                 
-            #regularisation des coefficients si presence de demi-molecules -> tout est multiplie par 2
+            # coefficient regularization in case of half molecules -> everything is multiplied by 2
             if halfmolS == True or halfmolP == True:
                 for c in substratesDic.keys():
                     substratesDic[c] = substratesDic[c]*2
@@ -209,15 +209,15 @@ def main():
                     productsDic[c] = int(productsDic[c])
                 
             
-            #determination si tous les fichiers des composants existent sans le repertoire sscan0 (par exemple)
+            # determination if all compound files exist 
             allFilesExist = True
             for k in substratesDic.keys():
-                if not os.path.exists('/env/cns/proj/agc/msorokina/RMS/createRMS/mol-sig-results/'+molsigdir+'10/'+k+'.'+molSigType+'10'):
+                if not os.path.exists('mol-sig-results/'+molsigdir+'10/'+k+'.'+molSigType+'10'):
                     allFilesExist = False
                    
 
             for k in productsDic.keys():
-                if not os.path.exists('/env/cns/proj/agc/msorokina/RMS/createRMS/mol-sig-results/'+molsigdir+'10/'+k+'.'+molSigType+'10'):
+                if not os.path.exists('mol-sig-results/'+molsigdir+'10/'+k+'.'+molSigType+'10'):
                     allFilesExist= False
             
             
@@ -225,13 +225,13 @@ def main():
             if allFilesExist and len(substratesDic.keys()) != 0 and len(productsDic.keys()) != 0:
                 for i in rayons:
                     
-                    #path ou se trouvent tous les fichiers molsig a ce rayon
-                    source = '/env/cns/proj/agc/msorokina/RMS/createRMS/mol-sig-results/'+molsigdir+str(i)
+                    #path where are all the molsig files at the given rayon
+                    source = 'mol-sig-results/'+molsigdir+str(i)
                     substratesSignature = {}
                     productsSignature = {}
                 
                 
-                    #recuperation des molsig pour les substrats
+                    # molsigs recuperation for substrates 
                     for c in substratesDic.keys():
                         filename = source+'/'+c+'.'+molSigType+str(i)
                         try:
@@ -241,11 +241,10 @@ def main():
                                 match = re.search(r"^0.0.*",line)
                                 if not match :
                                     
-                                    l = line.split(' ') #en 0 on a donc le chiffre et en 1 les atomes
+                                    l = line.split(' ') 
                                     motif = l[1]
                                     motif = motif[:-1]
                                     
-                                    #enleve les charges
                                     motif = motif.replace('-1','')
                                     motif = motif.replace('+1','')
                                     
@@ -263,7 +262,7 @@ def main():
                     
                     
                     
-                    #recuperation des molsig pour les produits
+                    # recovery of molsigs for products
                     for c in productsDic.keys():
                         filename = source+'/'+c+'.'+molSigType+str(i)
                         try:
@@ -273,11 +272,11 @@ def main():
                                 match = re.search(r"^0.0.*",line)
                                 if not match :
                                     
-                                    l = line.split(' ') #en 0 on a donc le chiffre et en 1 les atomes
+                                    l = line.split(' ')
                                     motif = l[1]
                                     motif = motif[:-1]
                                     
-                                    #enleve les charges
+                      
                                     motif = motif.replace('-1','')
                                     motif = motif.replace('+1','')
                                     
@@ -293,29 +292,28 @@ def main():
                     
                     
                     
-                    #calcul des RMS
-                    # maintenant il faut soustraire : products-substrates
+                    #RMS computation
+                    # substraction: products - substrates
                     reactionSignature = {}
-                    #3 cas pour les sous parties:
-                    # -presence dans les 2 dict
-                    # -present dans produts et absent dans substracts
-                    # -present dans substrates et absent dans products
+                    #3 cases for subparts:
+                    # -presence in both dictionnaries
+                    # - present in roducts and absent in substrates
+                    # - present in substrates and absent in products
                     
                     for p in productsSignature.keys():
                         if p in substratesSignature.keys():
-                            #premier cas : 
+                            #first case : 
                             reactionSignature[p] =productsSignature[p]-substratesSignature[p]
                         else:
-                            #deuxieme cas :
+                            #second case :
                             reactionSignature[p] =productsSignature[p]
                 
-                    #3e cas :
+                    #third cases :
                     for p in substratesSignature.keys():
                         if p not in productsSignature.keys():
                             reactionSignature[p]= 0 - substratesSignature[p]
                 
-                    #maintenant in faut ordonner les cles de reactionSignature pour qu'elles soient dans le meme ordre meme pour des
-                    #reactions differentes (ce qu'on cherche en fait)
+                    # ordering of keys for the reaction signatures so they are in the same order, even for different reactions
 
                     parts = sorted(reactionSignature.keys())
                 
