@@ -14,7 +14,7 @@ from Node import Node
 
 def main():
     
-    # openinf of the MR_RMSf_chain.txt file containing the identifiers of tall the reactions and the correspondinf RMSf chain
+    # opening of the MR_RMSf_chain.txt file containing the identifiers of tall the reactions and the correspondinf RMSf chain
     if sys.argv[1] != '':
         fileName = sys.argv[1]
     else:
