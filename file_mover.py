@@ -13,9 +13,9 @@ import shutil
 def main():
     
     
-    #option 1 : repertoire ou se trouvent les fichiers mol et les fichiers de resultats
-    #option 2: le type de scan (sscan, scan ou fscan)
-    #option 3: o ou n (si oui on pas fichiers aromatiques)
+    #option 1 : directory where are the mol files and the result files
+    #option 2 : the "scan" type (scan, sscan or fscan)
+    #option 3 : "o" or "n" (with or without aromatization)
     
     molfilesdir = sys.argv[1]
     scantype = sys.argv[2]
@@ -30,7 +30,7 @@ def main():
 
     rayons = [0,2,4,6,8,10]
     path = ''
-    # creation de repertoires pour chaque diametre
+    # creation of a directory for each diameter
     try:
         for i in rayons:
             #shutil.rmtree('mol-sig-results/sscan'+str(i))
