@@ -11,10 +11,9 @@ import shutil
 
 
 def main():
-    #commands.getstatusoutput("alias molconvert='/env/cns/proj/agc/tools/LINUX64/MarvinBeans/bin/molconvert' ") 
+
 	
-	
-	molconvert = sys.argv[1]
+    molconvert = sys.argv[1]
 	
     
     path = ''
@@ -46,7 +45,7 @@ def main():
         commands.getstatusoutput(commande)
     
     
-    #aromatisation
+    #aromatization
     inFileList2 = os.listdir(path+''+outdirP)
     inFileList2 = [os.path.join(path+''+outdirP, f) 
         for f in inFileList2 
