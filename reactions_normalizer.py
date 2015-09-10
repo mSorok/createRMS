@@ -13,7 +13,7 @@ import commands
 def main():
     
     
-    #par defaut, on a une nouvelle reaction
+    # the default is a new reaction
     newReactionFlag=1
     
     leftCompounds = []
@@ -31,17 +31,17 @@ def main():
     rightCflag = 0
     
     
-    reaFile = open('/env/cns/proj/agc/msorokina/RMS/createRMS/reactions.dat','r')
+    reaFile = open('reactions.dat','r')
     
-    reaFileTab = open('/env/cns/proj/agc/msorokina/RMS/createRMS/reactions_tab','w')
+    reaFileTab = open('reactions_tab','w')
     
     for line in reaFile:
         if not line.startswith('#'):
-            #on ne lit pas les commentaires
+            #comments are omitted
             
             if line.startswith('//'):
                 
-                #on a termine une reaction - on print tout et on passe tous les flag a 0
+                # the reaction is over - general print and all flags to 0
                 newReactionFlag = 0
                 leftC = '$'.join(leftCompounds)
                 rightC = '$'.join(rightCompounds)
@@ -53,7 +53,7 @@ def main():
                 reaFileTab.write(frame[:-1]+"\t"+leftC+"\t"+reactionDirection+"\t"+rightC+"\n")
                 
                 
-            # frame de la reaction
+            # reaction frame
             if line.startswith('UNIQUE-ID'):
                 tabf = line.split(' - ')
                 frame=tabf[1]
@@ -65,7 +65,7 @@ def main():
                                 
                 
                 
-            #composants de gauche  
+            #left compounds
             if line.startswith('LEFT'):
                 if leftCflag==0:
                     tabc = line.split(' - ')
@@ -81,7 +81,7 @@ def main():
                     leftCompounds.append(c[:-1])
                     lastLcompound = c[:-1]
                 
-            #coefficients de stoechiometrie de gauche
+            # left stoechiometry coefficients 
             if line.startswith('^COEFFICIENT') and leftCflag == 1 and rightCflag == 0:
                 tabc = line.split(' - ')
                 leftCompounds.remove(lastLcompound)
@@ -92,7 +92,7 @@ def main():
                 
                 
                 
-            #composants de droite   
+            #right compounds  
             if line.startswith('RIGHT'): 
                 if rightCflag==0:
                     tabc = line.split(' - ')
@@ -101,14 +101,14 @@ def main():
                     c = tabc[1]
                     rightCompounds.append(c[:-1])
                     lastRcompound = c[:-1]
-                    leftCflag = 0 #on le met bien a 0 pour pas que ca puisse gener au niveau des coefficients
+                    leftCflag = 0
                 elif rightCflag==1:
                     tabc = line.split(' - ')
                     c = tabc[1]
                     rightCompounds.append(c[:-1])
                     lastRcompound = c[:-1]
                 
-            #coefficients de stoechiometrie de droite
+            # right stoechiometry coefficients 
             if line.startswith('^COEFFICIENT') and leftCflag == 0 and rightCflag == 1:
                 tabc = line.split(' - ')
                 c = tabc[1]
@@ -117,7 +117,7 @@ def main():
                 rightCompounds.append(lastRcompound)
                 
             
-            #direction de la reaction   
+            #reaction direction  
             if line.startswith('REACTION-DIRECTION'):
                 tabD = line.split(' - ')
                 d = tabD[1]
