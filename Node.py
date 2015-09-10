@@ -1,17 +1,17 @@
 
 class Node:
-    """ classe representant le noeud-RMS_id dans l'arborescence generale """
-    """ identifiant du noeud = id a assigner une fois l'arbre a ete contruit. il s'agit du RMS_id definitif"""
-    """ diametre pour lequel il a ete calcule"""
-    """ Noeud parent"""
-    """ Liste de noeuds enfants """
+    """ class representing the RMS node in the general tree """
+    """ id : node indentifier, the id to assign once the tree is constructed. It's the final RMSid """
+    """ diametre : the diameter for which the tree was computed """"
+    """ parent node """
+    """ List of child nodes """
     
     
     
     
     
     def __init__(self,idtmp,diametre):
-        #constructeur
+        #constructor
         self.id_rmsf = idtmp
         self.parent = None
         self.diametre = diametre
@@ -27,7 +27,7 @@ class Node:
    
     
     def setRmsId(self,def_id):
-        """setteur pour l'id du RMS definitif """
+        """ setter for the final RMSid """
         self.RMS_id = def_id
         
         
