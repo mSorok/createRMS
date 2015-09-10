@@ -51,7 +51,7 @@ def main():
     
     
     print "moving files to correct directory"
-    #lancement du programme qui va ranger les fichiers crees
+    # launch of the programm which will put in order the created files
     (status, output) = commands.getstatusoutput('python file_mover.py '+dir+' '+scantype+' '+aroma)
     
 
